@@ -6,6 +6,7 @@
 #include <sstream>
 #include <algorithm>
 #include <chrono>
+#include <cmath>
 #include <Eigen/Dense>
 
 using namespace std;

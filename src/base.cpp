@@ -2,6 +2,7 @@
 #include "../include/base.h"
 vector<vector<int>> Base::GetData(const string filename)
 {
+    cout<<"开始将ector导入矩阵"<<endl;
     cout<<"开始读取数据集"<<filename<<endl;
     vector<vector<int>> InData;
     if (filename.empty()) return InData;
@@ -82,7 +83,7 @@ int Base::VecToMatrixBin(vector<vector<int>> InData,MatrixXf &dataMat,VectorXf &
         }
     }
     //cout<<labelMat.topRows(15)<<endl;
-    InData.~vector();
+    //InData.~vector();
     cout << "dataMat：" << dataMat.rows() << "*" << dataMat.cols() << endl;
     cout << "二分类labelMat：" << labelMat.rows() << endl;
     return 0;
@@ -96,6 +97,8 @@ int Base::VecToMatrix(vector<vector<int>> InData,MatrixXf &dataMat,VectorXf &lab
 
     int rowLabel = InData.size();
     labelMat.resize(rowLabel);
+
+    //dataMat. row(0)= VectorXf::Map(&InData[0][0],InData.at(0).size());//转化成矩阵  ??? 不支持？？？
     for (size_t j = 0; j < InData.size(); j++)
     {
         for (size_t i = 0; i < InData.at(j).size(); i++)
@@ -108,7 +111,7 @@ int Base::VecToMatrix(vector<vector<int>> InData,MatrixXf &dataMat,VectorXf &lab
             dataMat( i - 1,j) = (double)InData.at(j).at(i);
         }
     }
-    InData.~vector();
+    //InData.~vector();
     cout << "dataMat：" << dataMat.rows() << "*" << dataMat.cols() << endl;
     cout << "labelMat：" << labelMat.rows() << endl;
     return 0;
