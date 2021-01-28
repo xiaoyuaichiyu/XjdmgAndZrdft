@@ -2,17 +2,18 @@
 #include "../include/base.h"
 vector<vector<int>> Base::GetData(const string filename)
 {
-    cout<<"开始将ector导入矩阵"<<endl;
-    cout<<"开始读取数据集"<<filename<<endl;
+    cout << "开始将ector导入矩阵" << endl;
+    cout << "开始读取数据集" << filename << endl;
     vector<vector<int>> InData;
-    if (filename.empty()) return InData;
+    if (filename.empty())
+        return InData;
     if (filename == "Mnist/mnist_test.csv") //针对数据集占用空间进行优化
     {
-        InData.reserve(11000);
+        InData.reserve(784 * 11000);
     }
     if (filename == "Mnist/mnist_train.csv") //针对数据集占用空间进行优化
     {
-        InData.reserve(61000);
+        InData.reserve(784 * 61000);
     }
     vector<int> Data;
     int onepoint;
@@ -20,11 +21,11 @@ vector<vector<int>> Base::GetData(const string filename)
     InData.clear();
     ifstream inCsv(filename);
     cout << "开始读取" << filename << "数据" << endl;
-    int j=0;
+    int j = 0;
     while (!inCsv.eof())
     {
         j++;
-        //if (j==500)break;//暂取999
+        //if (j == 500)break;         //暂取999
         Data.reserve(785); //针对数据集维数占用空间进行优化
         getline(inCsv, line);
         if (line.empty())
@@ -57,18 +58,18 @@ vector<vector<int>> Base::GetData(const string filename)
     cout << "数据维数" << InData.at(0).size() << endl;
     return InData;
 }
-int Base::VecToMatrixBin(vector<vector<int>> InData,MatrixXf &dataMat,VectorXf &labelMat)
+int Base::VecToMatrixBin(vector<vector<int>> InData, MatrixXf &dataMat, VectorXf &labelMat)
 {
-    cout<<"开始将ector导入矩阵，二值"<<endl;
+    cout << "开始将ector导入矩阵，二值" << endl;
     int colData = InData.size();
-    int rowData= InData.at(0).size() - 1;
+    int rowData = InData.at(0).size() - 1;
     //dataArr.resize
     dataMat.resize(rowData, colData);
 
     int rowLabel = InData.size();
     labelMat.resize(rowLabel);
     for (size_t j = 0; j < InData.size(); j++)
-    {   
+    {
         for (size_t i = 0; i < InData.at(j).size(); i++)
         {
             if (i == 0)
@@ -79,7 +80,7 @@ int Base::VecToMatrixBin(vector<vector<int>> InData,MatrixXf &dataMat,VectorXf &
                     labelMat(j) = 1;
                 continue;
             }
-            dataMat( i - 1,j) = (double)InData.at(j).at(i)/255;
+            dataMat(i - 1, j) = (double)InData.at(j).at(i) / 255;
         }
     }
     //cout<<labelMat.topRows(15)<<endl;
@@ -88,10 +89,10 @@ int Base::VecToMatrixBin(vector<vector<int>> InData,MatrixXf &dataMat,VectorXf &
     cout << "二分类labelMat：" << labelMat.rows() << endl;
     return 0;
 }
-int Base::VecToMatrix(vector<vector<int>> InData,MatrixXf &dataMat,VectorXf &labelMat)
+int Base::VecToMatrix(vector<vector<int>> InData, MatrixXf &dataMat, VectorXf &labelMat)
 {
-    int  colData= InData.size();
-    int  rowData= InData.at(0).size() - 1;
+    int colData = InData.size();
+    int rowData = InData.at(0).size() - 1;
     //dataArr.resize
     dataMat.resize(rowData, colData);
 
@@ -108,10 +109,40 @@ int Base::VecToMatrix(vector<vector<int>> InData,MatrixXf &dataMat,VectorXf &lab
                 labelMat(j) = InData.at(j).at(i);
                 continue;
             }
-            dataMat( i - 1,j) = (double)InData.at(j).at(i);
+            dataMat(i - 1, j) = (double)InData.at(j).at(i);
         }
     }
     //InData.~vector();
+    cout << "dataMat：" << dataMat.rows() << "*" << dataMat.cols() << endl;
+    cout << "labelMat：" << labelMat.rows() << endl;
+    return 0;
+}
+int Base::VecToMatrixDatabin(vector<vector<int>> InData, MatrixXi &dataMat, VectorXi &labelMat)
+{
+    //Map<MatrixXi> mf((InData.at(0)).data(), rowData, colData);//利用c风格指针直接倒入matrix
+    int colData = InData.size();
+    int rowData = InData.at(0).size() - 1;
+    //dataArr.resize
+    dataMat.resize(rowData, colData);
+
+    int rowLabel = InData.size();
+    labelMat.resize(rowLabel);
+
+    for (size_t j = 0; j < InData.size(); j++)
+    {
+        for (size_t i = 0; i < InData.at(j).size(); i++)
+        {
+            if (i == 0)
+            {
+                labelMat(j) = InData.at(j).at(i);
+                continue;
+            }
+            if (InData.at(j).at(i)>128)
+                dataMat(i - 1, j)=1;
+            else
+                dataMat(i - 1, j)=0;
+        }
+    }
     cout << "dataMat：" << dataMat.rows() << "*" << dataMat.cols() << endl;
     cout << "labelMat：" << labelMat.rows() << endl;
     return 0;

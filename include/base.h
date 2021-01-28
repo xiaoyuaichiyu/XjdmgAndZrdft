@@ -24,9 +24,12 @@ public:
     // VectorXf labelMat;          //数据集的标签
 
     vector<vector<int>> GetData(const string filename); //csv转换成InData
-    int VecToMatrixBin(vector<vector<int>> InData,MatrixXf &dataMat,VectorXf &labelMat);       //将vector转换成矩阵，并将标签进行二分类,数据进行归一化
-    int VecToMatrix(vector<vector<int>> InData,MatrixXf &dataMat,VectorXf &labelMat);            //将vector转换成矩阵
-    //int stest(int m);
+    //将vector转换成矩阵，并将标签进行二分类,数据进行归一化
+    int VecToMatrixBin(vector<vector<int>> InData,MatrixXf &dataMat,VectorXf &labelMat);    
+    //将vector转换成矩阵   
+    int VecToMatrix(vector<vector<int>> InData,MatrixXf &dataMat,VectorXf &labelMat);  
+    //对特征进行二值处理。主要目的：简化模型，减少每个特征的可选值，否则得到同样的准确率，需要更多的数据            
+    int VecToMatrixDatabin(vector<vector<int>> InData,MatrixXi &dataMat,VectorXi &labelMat);            
 public:
     Base(){};
     ~Base(){};
